@@ -334,12 +334,21 @@ script:
   - kubectl get svc/nginx -o yaml
   - kubectl get deployment/nginx -o yaml || true
   - kubectl get pod/nginx -o yaml
-
-  - curl [${POD_IPV6_IP}]:80 || true
   - |
-    set -x
-    NODE_IPV6_IP=`ifconfig ${net_interface} | grep "inet6" | awk '{ print $2}'`
-    curl [${NODE_IPV6_IP}]:8080 || true
+    if [ "${IPV6}" = 'true' ];then
+      set -x
+      POD_IPV4_IP=`kubectl get pod/nginx -o go-template="{{(index .status.podIPs 0).ip}}"`
+      curl ${POD_IPV4_IP}:80 || true
+
+      POD_IPV6_IP=`kubectl get pod/nginx -o go-template="{{(index .status.podIPs 1).ip}}"` || true
+      curl [${POD_IPV6_IP}]:80 || true
+
+      CLUSTER_IPV6_IP=`kubectl get svc/nginx -o go-template="{{ .spec.clusterIP }}"`
+      curl [${CLUSTER_IPV6_IP}]:80 || true
+
+      NODE_IPV6_IP=`ifconfig ${net_interface} | grep "inet6" | awk '{ print $2}'`
+      curl [${NODE_IPV6_IP}]:8080 || true
+    fi
 
   - kubectl delete svc nginx || true
   - kubectl delete deployment nginx || true
@@ -436,4 +445,4 @@ jobs:
 
 branches:
   only:
-    - master
+    - dev
