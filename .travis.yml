@@ -124,13 +124,13 @@ before_install:
     if [ $(go env GOARCH) = "arm64" ];then
       export net_interface=ens5
     fi
- 
+
     if [ "${IPV6}" = "true" ];then
-      export net_interface=$(echo $(ip addr | grep eth0 | cut -d ':' -f 2 | cut -d ' ' -f 2))
+      export net_interface=eth0
     fi
 
     echo $net_interface
-  - export SERVER_IP=`ifconfig ${net_interface} | grep "inet" | awk '{ print $2}' | cut -d ':' -f 2`
+  - export SERVER_IP=`ifconfig ${net_interface} | grep "inet" | awk '{ print $2}' | head -1`
   - if [ -z "${SERVER_IP}" ];then exit 1; fi
   - ./lnmp-k8s > /dev/null
   - echo $SERVER_IP
@@ -341,6 +341,7 @@ script:
   - kubectl get svc/nginx -o yaml
   - kubectl get deployment/nginx -o yaml || true
   - kubectl get pod/nginx -o yaml
+
   - |
     if [ "${IPV6}" = 'true' ];then
       set -x
@@ -353,7 +354,7 @@ script:
       CLUSTER_IPV6_IP=`kubectl get svc/nginx -o go-template="{{ .spec.clusterIP }}"`
       curl [${CLUSTER_IPV6_IP}]:80 || true
 
-      NODE_IPV6_IP=`ifconfig ${net_interface} | grep "inet6" | awk '{ print $2}'`
+      NODE_IPV6_IP=`ifconfig ${net_interface} | grep "inet6" | awk '{ print $2}' | head -1`
       curl [${NODE_IPV6_IP}]:8080 || true
     fi
 
