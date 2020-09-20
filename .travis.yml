@@ -52,6 +52,7 @@ before_install:
     fi
   # /home/travis/build/khs1994-docker/lnmp-k8s
   # /home/travis/gopath/src/github.com/[secure]-docker/lnmp-k8s
+  - ifconfig || true
   - pwd
   - df -h
   - git clone --depth=1 -b 19.03 https://github.com/khs1994-docker/lnmp ~/lnmp
@@ -125,7 +126,7 @@ before_install:
     fi
  
     if [ "${IPV6}" = "true" ];then
-      export net_interface=$(echo $(ipaddr | grep eth0 | cut -d ':' -f 2 | cut -d ' ' -f 2))
+      export net_interface=$(echo $(ip addr | grep eth0 | cut -d ':' -f 2 | cut -d ' ' -f 2))
     fi
 
     echo $net_interface
