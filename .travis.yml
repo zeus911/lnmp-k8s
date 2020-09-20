@@ -422,55 +422,13 @@ env:
 
 jobs:
   include:
-    # https://kubernetes.io/docs/setup/release/version-skew-policy/#supported-versions
-    # 只维护最新的 3 个版本
-    # alpha version
-    # - os: linux
-    #   dist: focal
-    #   env: CI_KUBERNETES_VERSION=1.19.0-rc.4 LNMP_K8S_GET="--url"
-    # next version
-    - os: linux
-      dist: focal
-      env: CI_KUBERNETES_VERSION=1.20.0-alpha.0 LNMP_K8S_GET="--url"
-    # current stable version
-    # cri-o
-    - os: linux
-      dist: focal
-      env: CI_KUBERNETES_VERSION=1.19.0 LNMP_K8S_LOCAL_INSTALL_OPTIONS="--crio" k8S_IMAGE_NS=khs1994 k8S_IMAGE_REGISTRY=useccr.ccs.tencentyun.com
-    # containerd
-    - os: linux
-      dist: focal
-      env: CI_KUBERNETES_VERSION=1.19.2 LNMP_K8S_GET="--url"                            GENERATE_CLI_HELP=true
-    # arm64
-    - os: linux
-      dist: focal
-      arch: arm64-graviton2
-      virt: vm
-      group: edge
-      env: CI_KUBERNETES_VERSION=1.19.0 LNMP_K8S_GET="--url"
-    # containerd + cni calico ebpf
-    - os: linux
-      dist: focal
-      env: CI_KUBERNETES_VERSION=1.19.2 LNMP_K8S_GET="--url"                            CNI_CALICO_EBPF=true
     # containerd + ipv6
     - os: linux
       dist: focal
+      arch: arm64-graviton2
+      virt: lxd
+      group: edge
       env: CI_KUBERNETES_VERSION=1.19.2 LNMP_K8S_GET="--url"                            IPV6=true
-    # docker
-    - os: linux
-      dist: focal
-      env: CI_KUBERNETES_VERSION=1.19.0 LNMP_K8S_LOCAL_INSTALL_OPTIONS="--docker"
-    # custom k8s root
-    - os: linux
-      dist: focal
-      env: CI_KUBERNETES_VERSION=1.19.2 LNMP_K8S_GET="--url"                            K8S_ROOT=/opt/k8s-custom
-    # old version
-    - os: linux
-      dist: focal
-      env: CI_KUBERNETES_VERSION=1.18.9 LNMP_K8S_GET="--url"
-    - os: linux
-      dist: focal
-      env: CI_KUBERNETES_VERSION=1.17.12 LNMP_K8S_GET="--url"
   fast_finish: true
   allow_failures:
   - env: CI_KUBERNETES_VERSION=1.20.0-alpha.0 LNMP_K8S_GET="--url"
