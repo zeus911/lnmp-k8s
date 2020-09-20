@@ -123,6 +123,12 @@ before_install:
     if [ $(go env GOARCH) = "arm64" ];then
       export net_interface=ens5
     fi
+ 
+    if [ "${IPV6}" = "true" ];then
+      export net_interface=$(echo $(ipaddr | grep eth0 | cut -d ':' -f 2 | cut -d ' ' -f 2))
+    fi
+
+    echo $net_interface
   - export SERVER_IP=`ifconfig ${net_interface} | grep "inet" | awk '{ print $2}' | cut -d ':' -f 2`
   - if [ -z "${SERVER_IP}" ];then exit 1; fi
   - ./lnmp-k8s > /dev/null
