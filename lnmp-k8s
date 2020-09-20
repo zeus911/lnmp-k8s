@@ -397,7 +397,7 @@ _helm_install(){
     return
   fi
 
-  $(_sudo) tar -zxf ${TMP_ROOT}/${TAR_FILE} -C ${TMP_ROOT}
+  $(_sudo) tar --no-same-owner -zxf ${TMP_ROOT}/${TAR_FILE} -C ${TMP_ROOT}
   $(_sudo) cp ${TMP_ROOT}/${GOOS}-${GOARCH}/helm ${K8S_ROOT}/bin/
   $(_sudo) rm -rf ${TMP_ROOT}/${GOOS}-${GOARCH}
 }
