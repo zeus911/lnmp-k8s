@@ -19,7 +19,7 @@ Options:
 Management Commands:
   app*        Docker Application (Docker Inc., v0.8.0)
   builder     Manage builds
-  buildx*     Build with BuildKit (Docker Inc., v0.3.1-tp-docker)
+  buildx*     Build with BuildKit (Docker Inc., v0.4.2-tp-docker)
   config      Manage Docker configs
   container   Manage containers
   context     Manage contexts
